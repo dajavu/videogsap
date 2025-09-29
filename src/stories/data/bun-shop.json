@@ -1,0 +1,348 @@
+{
+  "id": "bun-shop",
+  "title": "烧饼店估值故事",
+  "summary": "跟随 AI 引导，拆解一家社区烧饼店从转让到利润翻倍的全过程，让投资逻辑一步步呈现。",
+  "tags": [
+    "财经",
+    "估值",
+    "叙事动画"
+  ],
+  "stageTheme": "stage-theme-night",
+  "layout": [
+    {
+      "type": "StoryElement",
+      "id": "scene-glow",
+      "className": "interactive-stage__glow"
+    },
+    {
+      "type": "SceneBubble",
+      "id": "label-store",
+      "position": {
+        "x": 50,
+        "y": 22
+      },
+      "tone": "primary",
+      "size": "lg",
+      "text": "烧饼铺"
+    },
+    {
+      "type": "SceneBubble",
+      "id": "label-growth",
+      "position": {
+        "x": 50,
+        "y": 9
+      },
+      "tone": "success",
+      "size": "md",
+      "text": "利润翻倍"
+    },
+    {
+      "type": "SceneBubble",
+      "id": "label-transfer",
+      "position": {
+        "x": 50,
+        "y": 68
+      },
+      "tone": "neutral",
+      "size": "md",
+      "text": "烧饼店转让"
+    },
+    {
+      "type": "StoreEmblem",
+      "id": "store-emblem",
+      "position": {
+        "x": 50,
+        "y": 44
+      },
+      "label": "烧饼铺"
+    },
+    {
+      "type": "FlowArc",
+      "id": "flow-transfer",
+      "position": {
+        "x": 50,
+        "y": 56
+      },
+      "label": "王五接手"
+    },
+    {
+      "type": "PersonaNode",
+      "id": "persona-zhang",
+      "position": {
+        "x": 12,
+        "y": 46
+      },
+      "name": "张三",
+      "label": "原老板",
+      "theme": "owner"
+    },
+    {
+      "type": "PersonaNode",
+      "id": "persona-wang",
+      "position": {
+        "x": 88,
+        "y": 46
+      },
+      "name": "王五",
+      "label": "新老板",
+      "theme": "buyer"
+    },
+    {
+      "type": "MetricPill",
+      "id": "metric-price",
+      "valueId": "metric-price-value",
+      "label": "转让价格",
+      "position": {
+        "x": 30,
+        "y": 76
+      },
+      "suffix": " 元"
+    },
+    {
+      "type": "MetricPill",
+      "id": "metric-assets",
+      "valueId": "metric-assets-value",
+      "label": "净资产",
+      "position": {
+        "x": 70,
+        "y": 76
+      },
+      "suffix": " 元"
+    },
+    {
+      "type": "MetricPill",
+      "id": "metric-profit",
+      "valueId": "metric-profit-value",
+      "label": "年利润",
+      "position": {
+        "x": 50,
+        "y": 86
+      },
+      "suffix": " 元"
+    },
+    {
+      "type": "MetricPill",
+      "id": "metric-roe",
+      "valueId": "metric-roe-value",
+      "label": "ROE",
+      "position": {
+        "x": 50,
+        "y": 94
+      },
+      "suffix": "%",
+      "className": "metric-pill--compact"
+    },
+    {
+      "type": "FloatingElement",
+      "id": "growth-flare",
+      "position": {
+        "x": 50,
+        "y": 32
+      },
+      "className": "growth-flare",
+      "text": "增长动能释放"
+    }
+  ],
+  "steps": [
+    {
+      "id": "intro-glow",
+      "title": "舞台灯光点亮",
+      "actions": [
+        {
+          "type": "animate-in",
+          "target": "scene-glow",
+          "preset": "fade-in"
+        }
+      ]
+    },
+    {
+      "id": "store-reveal",
+      "title": "烧饼铺登场",
+      "actions": [
+        {
+          "type": "animate-in",
+          "target": "store-emblem",
+          "preset": "scale-in"
+        },
+        {
+          "type": "animate-in",
+          "target": "label-store",
+          "preset": "fade-in-up"
+        }
+      ]
+    },
+    {
+      "id": "zhang-arrives",
+      "title": "张三现身",
+      "actions": [
+        {
+          "type": "animate-in",
+          "target": "persona-zhang",
+          "preset": "fade-in-right"
+        }
+      ]
+    },
+    {
+      "id": "baseline-profit",
+      "title": "基准利润",
+      "actions": [
+        {
+          "type": "animate-in",
+          "target": "metric-profit",
+          "preset": "fade-in-up"
+        },
+        {
+          "type": "counter",
+          "target": "metric-profit-value",
+          "from": 0,
+          "to": 10,
+          "duration": 0.6,
+          "suffix": " 元"
+        }
+      ]
+    },
+    {
+      "id": "baseline-assets",
+      "title": "净资产补充",
+      "actions": [
+        {
+          "type": "animate-in",
+          "target": "metric-assets",
+          "preset": "fade-in-up"
+        },
+        {
+          "type": "counter",
+          "target": "metric-assets-value",
+          "from": 0,
+          "to": 50,
+          "duration": 0.6,
+          "suffix": " 元"
+        }
+      ]
+    },
+    {
+      "id": "baseline-roe",
+      "title": "ROE 展示",
+      "actions": [
+        {
+          "type": "animate-in",
+          "target": "metric-roe",
+          "preset": "fade-in-up"
+        },
+        {
+          "type": "counter",
+          "target": "metric-roe-value",
+          "from": 0,
+          "to": 20,
+          "duration": 0.6,
+          "suffix": "%"
+        }
+      ]
+    },
+    {
+      "id": "transfer-setup",
+      "title": "交易弧线准备",
+      "actions": [
+        {
+          "type": "animate-in",
+          "target": "flow-transfer",
+          "preset": "fade-in"
+        },
+        {
+          "type": "animate-in",
+          "target": "label-transfer",
+          "preset": "fade-in-up"
+        }
+      ]
+    },
+    {
+      "id": "wang-arrives",
+      "title": "王五加入",
+      "actions": [
+        {
+          "type": "animate-in",
+          "target": "persona-wang",
+          "preset": "fade-in-up"
+        }
+      ]
+    },
+    {
+      "id": "deal-price",
+      "title": "成交价公布",
+      "actions": [
+        {
+          "type": "animate-in",
+          "target": "metric-price",
+          "preset": "fade-in-up"
+        },
+        {
+          "type": "counter",
+          "target": "metric-price-value",
+          "from": 0,
+          "to": 100,
+          "duration": 0.8,
+          "suffix": " 元"
+        },
+        {
+          "type": "call",
+          "handler": "drawPath",
+          "options": {
+            "elementId": "flow-transfer",
+            "selector": "#flow-transfer-path",
+            "duration": 0.9,
+            "ease": "power2.out"
+          }
+        }
+      ]
+    },
+    {
+      "id": "growth-highlight",
+      "title": "利润翻倍伏笔",
+      "actions": [
+        {
+          "type": "animate-in",
+          "target": "label-growth",
+          "preset": "scale-in"
+        },
+        {
+          "type": "animate-in",
+          "target": "growth-flare",
+          "preset": "scale-in"
+        },
+        {
+          "type": "call",
+          "handler": "pulseScale",
+          "options": {
+            "elementId": "growth-flare",
+            "from": 0.4,
+            "to": 1,
+            "duration": 0.8,
+            "ease": "back.out(1.8)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "profit-growth",
+      "title": "利润跃升",
+      "actions": [
+        {
+          "type": "counter",
+          "target": "metric-profit-value",
+          "from": 10,
+          "to": 20,
+          "duration": 0.8,
+          "suffix": " 元"
+        },
+        {
+          "type": "counter",
+          "target": "metric-roe-value",
+          "from": 20,
+          "to": 40,
+          "duration": 0.8,
+          "suffix": "%"
+        }
+      ]
+    }
+  ]
+}
