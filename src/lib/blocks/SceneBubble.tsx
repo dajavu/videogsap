@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 import { FloatingElement } from './FloatingElement';
 
 interface SceneBubbleProps {
@@ -6,6 +6,10 @@ interface SceneBubbleProps {
   position: { x: number; y: number };
   tone?: 'primary' | 'success' | 'neutral';
   size?: 'sm' | 'md' | 'lg';
+  className?: string;
+  anchor?: 'center' | 'top-left';
+  zIndex?: number;
+  style?: CSSProperties;
   children: ReactNode;
 }
 
@@ -21,8 +25,27 @@ const sizeClass: Record<NonNullable<SceneBubbleProps['size']>, string> = {
   lg: 'scene-bubble--lg',
 };
 
-export const SceneBubble = ({ id, position, tone = 'neutral', size = 'md', children }: SceneBubbleProps) => (
-  <FloatingElement id={id} position={position} className={`scene-bubble ${toneClass[tone]} ${sizeClass[size]}`}>
+const joinClassNames = (...tokens: Array<string | false | null | undefined>) => tokens.filter(Boolean).join(' ');
+
+export const SceneBubble = ({
+  id,
+  position,
+  tone = 'neutral',
+  size = 'md',
+  className,
+  anchor,
+  zIndex,
+  style,
+  children,
+}: SceneBubbleProps) => (
+  <FloatingElement
+    id={id}
+    position={position}
+    anchor={anchor}
+    zIndex={zIndex}
+    style={style}
+    className={joinClassNames('scene-bubble', toneClass[tone], sizeClass[size], className)}
+  >
     {children}
   </FloatingElement>
 );

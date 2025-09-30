@@ -10,6 +10,7 @@ export type AnimationPreset =
 export type TimelineAction =
   | { type: 'animate-in'; target: string; preset?: AnimationPreset; vars?: Record<string, unknown> }
   | { type: 'animate-out'; target: string; preset?: AnimationPreset; vars?: Record<string, unknown> }
+  | { type: 'animate-to'; target: string; preset?: AnimationPreset; vars?: Record<string, unknown> }
   | { type: 'set-text'; target: string; text: string }
   | { type: 'counter'; target: string; from?: number; to: number; duration?: number; prefix?: string; suffix?: string; precision?: number }
   | { type: 'wait'; duration: number }

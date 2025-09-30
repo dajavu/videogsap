@@ -16,7 +16,7 @@ import {
   FloatingElement,
   StoryElement,
 } from '../lib';
-import type { ReactNode } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 
 interface PositionConfig {
   x: number;
@@ -25,16 +25,81 @@ interface PositionConfig {
 
 type LayoutElementConfig =
   | { type: 'StoryElement'; id: string; className?: string }
-  | { type: 'SceneBubble'; id: string; position: PositionConfig; tone?: 'primary' | 'success' | 'neutral'; size?: 'sm' | 'md' | 'lg'; text: string }
-  | { type: 'PersonaNode'; id: string; position: PositionConfig; name: string; label?: string; theme?: 'owner' | 'buyer' | 'neutral' }
-  | { type: 'FlowArc'; id: string; position: PositionConfig; label?: string; width?: number; height?: number; gradient?: [string, string] }
-  | { type: 'StoreEmblem'; id: string; position: PositionConfig; label: string }
-  | { type: 'MetricPill'; id: string; position: PositionConfig; valueId: string; label: string; prefix?: string; suffix?: string; className?: string }
-  | { type: 'FloatingElement'; id: string; position: PositionConfig; className?: string; text?: string; anchor?: 'center' | 'top-left'; zIndex?: number };
+  | {
+      type: 'SceneBubble';
+      id: string;
+      position: PositionConfig;
+      tone?: 'primary' | 'success' | 'neutral';
+      size?: 'sm' | 'md' | 'lg';
+      text: string;
+      className?: string;
+      anchor?: 'center' | 'top-left';
+      zIndex?: number;
+      style?: CSSProperties;
+    }
+  | {
+      type: 'PersonaNode';
+      id: string;
+      position: PositionConfig;
+      name: string;
+      label?: string;
+      theme?: 'owner' | 'buyer' | 'neutral';
+      className?: string;
+      anchor?: 'center' | 'top-left';
+      zIndex?: number;
+      style?: CSSProperties;
+    }
+  | {
+      type: 'FlowArc';
+      id: string;
+      position: PositionConfig;
+      label?: string;
+      width?: number;
+      height?: number;
+      gradient?: [string, string];
+      className?: string;
+      anchor?: 'center' | 'top-left';
+      zIndex?: number;
+      style?: CSSProperties;
+    }
+  | {
+      type: 'StoreEmblem';
+      id: string;
+      position: PositionConfig;
+      label: string;
+      className?: string;
+      anchor?: 'center' | 'top-left';
+      zIndex?: number;
+      style?: CSSProperties;
+    }
+  | {
+      type: 'MetricPill';
+      id: string;
+      position: PositionConfig;
+      valueId: string;
+      label: string;
+      prefix?: string;
+      suffix?: string;
+      className?: string;
+      anchor?: 'center' | 'top-left';
+      zIndex?: number;
+      style?: CSSProperties;
+    }
+  | {
+      type: 'FloatingElement';
+      id: string;
+      position: PositionConfig;
+      className?: string;
+      text?: string;
+      anchor?: 'center' | 'top-left';
+      zIndex?: number;
+      style?: CSSProperties;
+    };
 
 type JsonAction =
   | { type: 'animate-in'; target: string; preset?: string; vars?: Record<string, unknown> }
   | { type: 'animate-out'; target: string; preset?: string; vars?: Record<string, unknown> }
+  | { type: 'animate-to'; target: string; preset?: string; vars?: Record<string, unknown> }
   | { type: 'set-text'; target: string; text: string }
   | { type: 'counter'; target: string; from?: number; to: number; duration?: number; prefix?: string; suffix?: string; precision?: number }
   | { type: 'wait'; duration: number }
@@ -119,6 +184,47 @@ const toTimelineAction = (action: JsonAction): TimelineAction => {
   return action as TimelineAction;
 };
 
+const registerElementId = (
+  registry: Map<string, string>,
+  id: string,
+  source: string,
+  storyId: string,
+) => {
+  if (!id) return;
+  if (registry.has(id)) {
+    console.warn(
+      `[Story:${storyId}] Duplicate element id "${id}" defined in ${source} (previously in ${registry.get(id) ?? 'unknown'})`,
+    );
+    return;
+  }
+  registry.set(id, source);
+};
+
+const actionHasTarget = (action: JsonAction): action is JsonAction & { target: string } => {
+  return 'target' in action && typeof action.target === 'string';
+};
+
+const validateStory = (story: StoryFile) => {
+  const registry = new Map<string, string>();
+
+  story.layout.forEach((item, index) => {
+    registerElementId(registry, item.id, `layout[${index}]<${item.type}>`, story.id);
+    if (item.type === 'MetricPill') {
+      registerElementId(registry, item.valueId, `layout[${index}]<${item.type}>.valueId`, story.id);
+    }
+  });
+
+  story.steps.forEach((step) => {
+    step.actions.forEach((action, actionIndex) => {
+      if (actionHasTarget(action) && !registry.has(action.target)) {
+        console.warn(
+          `[Story:${story.id}] Step "${step.id}" action[${actionIndex}] (${action.type}) references unknown target "${action.target}"`,
+        );
+      }
+    });
+  });
+};
+
 const resolveSteps = (steps: JsonStep[]): StepDefinition[] =>
   steps.map((step) => ({
     id: step.id,
@@ -139,6 +245,10 @@ const renderLayoutElement = (config: LayoutElementConfig): ReactNode => {
           position={config.position}
           tone={config.tone}
           size={config.size}
+          className={config.className}
+          anchor={config.anchor}
+          zIndex={config.zIndex}
+          style={config.style}
         >
           {config.text}
         </SceneBubble>
@@ -152,6 +262,10 @@ const renderLayoutElement = (config: LayoutElementConfig): ReactNode => {
           name={config.name}
           label={config.label}
           theme={config.theme}
+          className={config.className}
+          anchor={config.anchor}
+          zIndex={config.zIndex}
+          style={config.style}
         />
       );
     case 'FlowArc':
@@ -164,10 +278,25 @@ const renderLayoutElement = (config: LayoutElementConfig): ReactNode => {
           width={config.width}
           height={config.height}
           gradient={config.gradient}
+          className={config.className}
+          anchor={config.anchor}
+          zIndex={config.zIndex}
+          style={config.style}
         />
       );
     case 'StoreEmblem':
-      return <StoreEmblem key={config.id} id={config.id} position={config.position} label={config.label} />;
+      return (
+        <StoreEmblem
+          key={config.id}
+          id={config.id}
+          position={config.position}
+          label={config.label}
+          className={config.className}
+          anchor={config.anchor}
+          zIndex={config.zIndex}
+          style={config.style}
+        />
+      );
     case 'MetricPill':
       return (
         <MetricPill
@@ -179,6 +308,9 @@ const renderLayoutElement = (config: LayoutElementConfig): ReactNode => {
           prefix={config.prefix}
           suffix={config.suffix}
           className={config.className}
+          anchor={config.anchor}
+          zIndex={config.zIndex}
+          style={config.style}
         />
       );
     case 'FloatingElement':
@@ -190,6 +322,7 @@ const renderLayoutElement = (config: LayoutElementConfig): ReactNode => {
           className={config.className}
           anchor={config.anchor}
           zIndex={config.zIndex}
+          style={config.style}
         >
           {config.text}
         </FloatingElement>
@@ -199,15 +332,18 @@ const renderLayoutElement = (config: LayoutElementConfig): ReactNode => {
   }
 };
 
-const toResolvedStory = (story: StoryFile): ResolvedStory => ({
-  id: story.id,
-  title: story.title,
-  summary: story.summary,
-  tags: story.tags ?? [],
-  stageTheme: story.stageTheme,
-  layout: story.layout,
-  steps: resolveSteps(story.steps),
-});
+const toResolvedStory = (story: StoryFile): ResolvedStory => {
+  validateStory(story);
+  return {
+    id: story.id,
+    title: story.title,
+    summary: story.summary,
+    tags: story.tags ?? [],
+    stageTheme: story.stageTheme,
+    layout: story.layout,
+    steps: resolveSteps(story.steps),
+  };
+};
 
 const JsonStoryExperience = ({ story, onBack }: { story: ResolvedStory; onBack: () => void }) => (
   <div className="story-shell story-shell--immersive">
