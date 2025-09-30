@@ -43,6 +43,18 @@ export const applyAction = ({ action, runtime, timeline, mode }: ApplyActionArgs
       }
       break;
     }
+    case 'animate-to': {
+      const target = runtime.elements.get(action.target);
+      if (!target) return;
+      const preset = resolvePreset(action.preset);
+      const toVars = { ...preset?.to, ...action.vars };
+      if (mode === 'instant') {
+        gsap.set(target, toVars);
+      } else {
+        timeline.to(target, toVars, '>-0.05');
+      }
+      break;
+    }
     case 'set-text': {
       const target = runtime.elements.get(action.target);
       if (!target) return;

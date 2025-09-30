@@ -23,6 +23,7 @@
       },
       "tone": "primary",
       "size": "lg",
+      "zIndex": 4,
       "text": "烧饼铺"
     },
     {
@@ -34,6 +35,7 @@
       },
       "tone": "success",
       "size": "md",
+      "zIndex": 5,
       "text": "利润翻倍"
     },
     {
@@ -45,6 +47,7 @@
       },
       "tone": "neutral",
       "size": "md",
+      "zIndex": 3,
       "text": "烧饼店转让"
     },
     {
@@ -54,6 +57,7 @@
         "x": 50,
         "y": 44
       },
+      "zIndex": 4,
       "label": "烧饼铺"
     },
     {
@@ -63,6 +67,7 @@
         "x": 50,
         "y": 56
       },
+      "zIndex": 2,
       "label": "王五接手"
     },
     {
@@ -74,7 +79,8 @@
       },
       "name": "张三",
       "label": "原老板",
-      "theme": "owner"
+      "theme": "owner",
+      "zIndex": 4
     },
     {
       "type": "PersonaNode",
@@ -85,7 +91,8 @@
       },
       "name": "王五",
       "label": "新老板",
-      "theme": "buyer"
+      "theme": "buyer",
+      "zIndex": 4
     },
     {
       "type": "MetricPill",
@@ -140,6 +147,7 @@
         "y": 32
       },
       "className": "growth-flare",
+      "zIndex": 6,
       "text": "增长动能释放"
     }
   ],
@@ -323,6 +331,34 @@
       ]
     },
     {
+      "id": "momentum-shift",
+      "title": "增长势能扩散",
+      "actions": [
+        {
+          "type": "animate-to",
+          "target": "growth-flare",
+          "vars": {
+            "yPercent": -18,
+            "duration": 0.9,
+            "ease": "sine.inOut",
+            "yoyo": true,
+            "repeat": 1
+          }
+        },
+        {
+          "type": "animate-to",
+          "target": "label-growth",
+          "vars": {
+            "scale": 1.08,
+            "duration": 0.9,
+            "ease": "sine.inOut",
+            "yoyo": true,
+            "repeat": 1
+          }
+        }
+      ]
+    },
+    {
       "id": "profit-growth",
       "title": "利润跃升",
       "actions": [
@@ -341,6 +377,26 @@
           "to": 40,
           "duration": 0.8,
           "suffix": "%"
+        }
+      ]
+    },
+    {
+      "id": "curtain-call",
+      "title": "舞台收束",
+      "actions": [
+        {
+          "type": "animate-out",
+          "target": "growth-flare",
+          "vars": {
+            "duration": 0.6
+          }
+        },
+        {
+          "type": "animate-out",
+          "target": "label-growth",
+          "vars": {
+            "duration": 0.6
+          }
         }
       ]
     }

@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react';
 import { FloatingElement } from './FloatingElement';
 
 interface FlowArcProps {
@@ -7,14 +8,38 @@ interface FlowArcProps {
   height?: number;
   label?: string;
   gradient?: [string, string];
+  className?: string;
+  anchor?: 'center' | 'top-left';
+  zIndex?: number;
+  style?: CSSProperties;
 }
 
-export const FlowArc = ({ id, position, width = 260, height = 140, label, gradient = ['#60a5fa', '#34d399'] }: FlowArcProps) => {
+const joinClassNames = (...tokens: Array<string | false | null | undefined>) => tokens.filter(Boolean).join(' ');
+
+export const FlowArc = ({
+  id,
+  position,
+  width = 260,
+  height = 140,
+  label,
+  gradient = ['#60a5fa', '#34d399'],
+  className,
+  anchor,
+  zIndex,
+  style,
+}: FlowArcProps) => {
   const viewBoxWidth = 260;
   const viewBoxHeight = 140;
 
   return (
-    <FloatingElement id={id} position={position} className="flow-arc">
+    <FloatingElement
+      id={id}
+      position={position}
+      anchor={anchor}
+      zIndex={zIndex}
+      style={style}
+      className={joinClassNames('flow-arc', className)}
+    >
       <svg
         className="flow-arc__svg"
         width={width}
